@@ -308,5 +308,50 @@ db.auth.onAuthStateChange((event,session)=>{
 });
 startApp();
 </script>
+ <script src="https://unpkg.com/html5-qrcode"></script>
+
+<div id="scannerBox" style="display:none;background:#12243b;padding:15px;border-radius:12px;color:white">
+  <h3>ماسح المنتجات</h3>
+  <div id="reader"></div>
+  <p id="scanResult">وجّه الكاميرا إلى الباركود</p>
+  <button onclick="stopProductScanner()">إيقاف الماسح</button>
+</div>
+
+<script>
+let productScanner;
+
+async function openProductScanner(){
+  document.getElementById("scannerBox").style.display="block";
+  productScanner=new Html5Qrcode("reader");
+  await productScanner.start(
+    {facingMode:"environment"},
+    {fps:10,qrbox:{width:250,height:180}},
+    async code=>{
+      await stopProductScanner();
+      document.getElementById("scanResult").textContent="تمت قراءة: "+code;
+      const {data,error}=await db.from("products")
+        .select("*").eq("barcode",code).maybeSingle();
+
+      if(error){
+        alert(error.message);
+        return;
+      }
+
+      if(data){
+        alert("المنتج موجود: "+data.name);
+      }else{
+        alert("منتج جديد. الباركود: "+code);
+      }
+    }
+  );
+}
+
+async function stopProductScanner(){
+  if(productScanner && productScanner.isScanning){
+    await productScanner.stop();
+  }
+  document.getElementById("scannerBox").style.display="none";
+}
+</script>
 </body>
 </html>
