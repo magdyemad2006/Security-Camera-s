@@ -42,7 +42,6 @@ label{display:block;margin-top:10px;color:#c9d9ed}
 <small>نظام إدارة المبيعات والمخازن والصيانة</small>
 </header>
 <main>
-
 <section id="login" class="card">
 <h2>تسجيل الدخول</h2>
 <input id="email" type="email" placeholder="البريد الإلكتروني">
@@ -56,11 +55,11 @@ label{display:block;margin-top:10px;color:#c9d9ed}
 <strong id="welcome">أهلاً بك</strong>
 <button class="secondary" onclick="logout()">تسجيل الخروج</button>
 </div>
-
 <nav>
 <button onclick="showPage('home')">الرئيسية</button>
 <button onclick="showPage('products')">المنتجات</button>
 <button onclick="showPage('purchases')">المشتريات</button>
+<button onclick="showPage('sales')">المبيعات</button>
 <button onclick="showPage('customers')">العملاء</button>
 <button onclick="showPage('suppliers')">الموردين</button>
 <button onclick="showPage('expenses')">المصروفات</button>
@@ -68,7 +67,6 @@ label{display:block;margin-top:10px;color:#c9d9ed}
 <button onclick="showPage('stock')">المخزون</button>
 <button onclick="showPage('reports')">التقارير</button>
 </nav>
-
 <div id="message"></div>
 
 <section id="home" class="page card">
@@ -85,7 +83,6 @@ label{display:block;margin-top:10px;color:#c9d9ed}
 <p id="scanResult" class="hint">وجّه الكاميرا إلى الباركود</p>
 <button class="secondary" onclick="stopProductScanner()">إيقاف الماسح</button>
 </div>
-
 <label>اسم المنتج</label>
 <input id="pname" placeholder="مثال: كاميرا مراقبة">
 <label>كود المنتج الداخلي</label>
@@ -112,30 +109,21 @@ label{display:block;margin-top:10px;color:#c9d9ed}
 <section id="purchases" class="page card hidden">
 <h2>فاتورة مشتريات جديدة</h2>
 <p class="hint">أضف الأصناف والكميات وأسعار الشراء، ثم اعتمد الفاتورة لإضافة الكميات للمخزون.</p>
-
 <label>المورد</label>
-<select id="purchaseSupplier">
-<option value="">بدون تحديد مورد</option>
-</select>
-
+<select id="purchaseSupplier"><option value="">بدون تحديد مورد</option></select>
 <div class="card">
 <h3>إضافة صنف للفاتورة</h3>
 <label>المنتج</label>
-<select id="purchaseProduct">
-<option value="">اختر المنتج</option>
-</select>
+<select id="purchaseProduct"><option value="">اختر المنتج</option></select>
 <label>الكمية</label>
 <input id="purchaseQty" type="number" min="0.01" step="0.01" placeholder="الكمية">
 <label>سعر شراء الوحدة</label>
 <input id="purchaseCost" type="number" min="0" step="0.01" placeholder="سعر الوحدة">
 <button onclick="addPurchaseItem()">إضافة الصنف للفاتورة</button>
 </div>
-
 <h3>أصناف الفاتورة</h3>
 <div id="purchaseItemsList" class="tablewrap">لم تتم إضافة أصناف بعد</div>
-
 <div class="stat">إجمالي الفاتورة<h2 id="purchaseTotal">0 ج.م</h2></div>
-
 <label>المبلغ المدفوع</label>
 <input id="purchasePaid" type="number" min="0" step="0.01" value="0">
 <label>طريقة الدفع</label>
@@ -146,11 +134,42 @@ label{display:block;margin-top:10px;color:#c9d9ed}
 </select>
 <label>ملاحظات</label>
 <input id="purchaseNotes" placeholder="ملاحظات الفاتورة">
-
 <button id="savePurchaseBtn" onclick="savePurchase()">حفظ واعتماد الفاتورة وإضافة المخزون</button>
-
 <h3>فواتير المشتريات السابقة</h3>
 <div id="purchasesList" class="tablewrap"></div>
+</section>
+
+<section id="sales" class="page card hidden">
+<h2>فاتورة مبيعات جديدة</h2>
+<p class="hint">اختر العميل والمنتجات والكميات. اعتماد الفاتورة يخصم الكمية من المخزون تلقائيًا.</p>
+<label>العميل</label>
+<select id="saleCustomer"><option value="">بدون تحديد عميل</option></select>
+<div class="card">
+<h3>إضافة صنف</h3>
+<label>المنتج</label>
+<select id="saleProduct"><option value="">اختر المنتج</option></select>
+<label>الكمية</label>
+<input id="saleQty" type="number" min="0.01" step="0.01" placeholder="الكمية">
+<label>سعر بيع الوحدة</label>
+<input id="salePrice" type="number" min="0" step="0.01" placeholder="سعر الوحدة">
+<button onclick="addSaleItem()">إضافة الصنف</button>
+</div>
+<h3>أصناف الفاتورة</h3>
+<div id="saleItemsList" class="tablewrap">لم تتم إضافة أصناف بعد</div>
+<div class="stat">إجمالي الفاتورة<h2 id="saleTotal">0 ج.م</h2></div>
+<label>المبلغ المدفوع</label>
+<input id="salePaid" type="number" min="0" step="0.01" value="0">
+<label>طريقة الدفع</label>
+<select id="salePayment">
+<option value="cash">نقدي</option>
+<option value="vodafone_cash">فودافون كاش</option>
+<option value="bank_transfer">تحويل بنكي</option>
+</select>
+<label>ملاحظات</label>
+<input id="saleNotes" placeholder="ملاحظات الفاتورة">
+<button id="saveSaleBtn" onclick="saveSaleInvoice()">حفظ واعتماد فاتورة البيع</button>
+<h3>فواتير المبيعات السابقة</h3>
+<div id="salesList" class="tablewrap"></div>
 </section>
 
 <section id="customers" class="page card hidden">
@@ -193,12 +212,10 @@ label{display:block;margin-top:10px;color:#c9d9ed}
 <h2>الفواتير</h2>
 <div id="invoicesList" class="tablewrap"></div>
 </section>
-
 <section id="stock" class="page card hidden">
 <h2>أرصدة المخزون</h2>
 <div id="stockList" class="tablewrap"></div>
 </section>
-
 <section id="reports" class="page card hidden">
 <h2>التقارير</h2>
 <div id="reportsList"></div>
@@ -216,19 +233,18 @@ let productScanner=null;
 let scannerStarting=false;
 let purchaseItems=[];
 let productsCache=[];
+let saleItems=[];
+let salesProductsCache=[];
 
 function msg(t){document.getElementById("message").textContent=t||"";}
-
 function safe(v){
  return String(v??"").replace(/[&<>"']/g,c=>({
  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
-
 function money(v){
  return Number(v||0).toLocaleString("ar-EG",{maximumFractionDigits:2})+" ج.م";
 }
-
 function table(rows,cols){
  if(!rows||!rows.length)return "<p>لا توجد بيانات حتى الآن</p>";
  return "<table><thead><tr>"+
@@ -237,13 +253,11 @@ function table(rows,cols){
  rows.map(r=>"<tr>"+cols.map(c=>"<td>"+safe(r[c[0]])+"</td>").join("")+"</tr>").join("")+
  "</tbody></table>";
 }
-
 function showPage(id){
  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
  document.getElementById(id).classList.remove("hidden");
  loadPage(id);
 }
-
 async function login(){
  const email=document.getElementById("email").value.trim();
  const password=document.getElementById("password").value;
@@ -254,12 +268,10 @@ async function login(){
  if(error){out.textContent=error.message;return;}
  await startApp();
 }
-
 async function logout(){
  await db.auth.signOut();
  location.reload();
 }
-
 async function startApp(){
  const {data:{user}}=await db.auth.getUser();
  if(!user){
@@ -269,13 +281,11 @@ async function startApp(){
  }
  const {data:roleRow,error}=await db.from("user_roles")
   .select("role").eq("user_id",user.id).maybeSingle();
-
  if(error||!roleRow){
   await db.auth.signOut();
   document.getElementById("loginMsg").textContent="الحساب ليس له صلاحية دخول للنظام.";
   return;
  }
-
  currentRole=roleRow.role;
  document.getElementById("login").classList.add("hidden");
  document.getElementById("app").classList.remove("hidden");
@@ -283,12 +293,12 @@ async function startApp(){
   "أهلاً بك — "+(currentRole==="admin"?"مدير النظام":"موظف");
  showPage("home");
 }
-
 async function loadPage(id){
  msg("");
  if(id==="home")return loadStats();
  if(id==="products")return loadProducts();
  if(id==="purchases")return loadPurchasePage();
+ if(id==="sales")return loadSalesPage();
  if(id==="customers")return loadCustomers();
  if(id==="suppliers")return loadSuppliers();
  if(id==="expenses")return loadExpenses();
@@ -296,7 +306,6 @@ async function loadPage(id){
  if(id==="stock")return loadStock();
  if(id==="reports")return loadReports();
 }
-
 async function loadStats(){
  const names=["products","customers","invoices","expenses"];
  const counts=await Promise.all(names.map(async t=>{
@@ -307,7 +316,6 @@ async function loadStats(){
   `<div class="stat">${["المنتجات","العملاء","الفواتير","المصروفات"][i]}<h2>${counts[i]}</h2></div>`
  ).join("");
 }
-
 function previewProductImage(){
  const file=document.getElementById("pimage").files[0];
  const img=document.getElementById("pimagePreview");
@@ -315,7 +323,6 @@ function previewProductImage(){
  img.src=URL.createObjectURL(file);
  img.style.display="block";
 }
-
 async function addProduct(){
  const btn=document.getElementById("saveProductBtn");
  const name=document.getElementById("pname").value.trim();
@@ -326,13 +333,9 @@ async function addProduct(){
  const purchase_price=Number(document.getElementById("pcost").value||0);
  const selling_price=Number(document.getElementById("psell").value||0);
  const file=document.getElementById("pimage").files[0];
-
  if(!name)return msg("اكتب اسم المنتج");
  if(purchase_price<0||selling_price<0)return msg("الأسعار لا يمكن أن تكون سالبة");
-
- btn.disabled=true;
- btn.textContent="جاري الحفظ...";
-
+ btn.disabled=true;btn.textContent="جاري الحفظ...";
  try{
   let image_url=null;
   if(file){
@@ -345,53 +348,28 @@ async function addProduct(){
    const {data}=db.storage.from("product-images").getPublicUrl(path);
    image_url=data.publicUrl;
   }
-
-  const record={
-   name,"كود":code||null,barcode:barcode||null,
-   brand:brand||null,model:model||null,image_url,
-   purchase_price,selling_price
-  };
-
+  const record={name,"كود":code||null,barcode:barcode||null,brand:brand||null,model:model||null,image_url,purchase_price,selling_price};
   const {error}=await db.from("products").insert(record);
   if(error)throw error;
-
-  ["pname","pcode","pbarcode","pbrand","pmodel","pcost","psell"].forEach(id=>{
-   document.getElementById(id).value="";
-  });
+  ["pname","pcode","pbarcode","pbrand","pmodel","pcost","psell"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("pimage").value="";
   document.getElementById("pimagePreview").style.display="none";
   msg("تم حفظ المنتج بنجاح");
-  await loadProducts();
-  await loadStats();
- }catch(e){
-  msg("تعذر حفظ المنتج: "+(e.message||String(e)));
- }finally{
-  btn.disabled=false;
-  btn.textContent="حفظ المنتج";
- }
+  await loadProducts();await loadStats();
+ }catch(e){msg("تعذر حفظ المنتج: "+(e.message||String(e)));}
+ finally{btn.disabled=false;btn.textContent="حفظ المنتج";}
 }
-
 async function loadProducts(){
  const {data,error}=await db.from("products")
   .select("name,كود,barcode,brand,model,image_url,purchase_price,selling_price,created_at")
   .order("created_at",{ascending:false});
-
  if(error){document.getElementById("productsList").textContent=error.message;return;}
- if(!data||!data.length){
-  document.getElementById("productsList").innerHTML="<p>لا توجد منتجات حتى الآن</p>";
-  return;
- }
+ if(!data||!data.length){document.getElementById("productsList").innerHTML="<p>لا توجد منتجات حتى الآن</p>";return;}
  document.getElementById("productsList").innerHTML=
  "<table><thead><tr><th>الصورة</th><th>المنتج</th><th>الكود</th><th>الباركود</th><th>الشركة</th><th>الموديل</th><th>الشراء</th><th>البيع</th></tr></thead><tbody>"+
- data.map(r=>`<tr>
- <td>${r.image_url?`<img class="photo" src="${safe(r.image_url)}" alt="صورة">`:"—"}</td>
- <td>${safe(r.name)}</td><td>${safe(r["كود"])}</td>
- <td>${safe(r.barcode)}</td><td>${safe(r.brand)}</td>
- <td>${safe(r.model)}</td><td>${money(r.purchase_price)}</td>
- <td>${money(r.selling_price)}</td></tr>`).join("")+
+ data.map(r=>`<tr><td>${r.image_url?`<img class="photo" src="${safe(r.image_url)}" alt="صورة">`:"—"}</td><td>${safe(r.name)}</td><td>${safe(r["كود"])}</td><td>${safe(r.barcode)}</td><td>${safe(r.brand)}</td><td>${safe(r.model)}</td><td>${money(r.purchase_price)}</td><td>${money(r.selling_price)}</td></tr>`).join("")+
  "</tbody></table>";
 }
-
 async function openProductScanner(){
  if(scannerStarting)return;
  if(!window.Html5Qrcode){msg("تعذر تحميل الماسح. حدّث الصفحة.");return;}
@@ -400,24 +378,16 @@ async function openProductScanner(){
  scannerStarting=true;
  try{
   productScanner=new Html5Qrcode("reader");
-  await productScanner.start(
-   {facingMode:"environment"},
-   {fps:10,qrbox:{width:250,height:180}},
-   handleProductScan
-  );
+  await productScanner.start({facingMode:"environment"},{fps:10,qrbox:{width:250,height:180}},handleProductScan);
   document.getElementById("scanResult").textContent="وجّه الكاميرا إلى الباركود";
- }catch(e){
-  document.getElementById("scanResult").textContent="تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدام الكاميرا.";
- }finally{scannerStarting=false;}
+ }catch(e){document.getElementById("scanResult").textContent="تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدام الكاميرا.";}
+ finally{scannerStarting=false;}
 }
-
 async function handleProductScan(code){
  document.getElementById("pbarcode").value=code;
  document.getElementById("scanResult").textContent="تمت قراءة: "+code;
  await stopProductScanner();
- const {data,error}=await db.from("products")
-  .select("name,كود,barcode,brand,model,purchase_price,selling_price")
-  .eq("barcode",code).maybeSingle();
+ const {data,error}=await db.from("products").select("name,كود,barcode,brand,model,purchase_price,selling_price").eq("barcode",code).maybeSingle();
  if(error){msg("تمت قراءة الباركود لكن تعذر البحث: "+error.message);return;}
  if(data){
   document.getElementById("pname").value=data.name||"";
@@ -429,7 +399,6 @@ async function handleProductScan(code){
   msg("المنتج موجود بالفعل وتم تحميل بياناته.");
  }else{msg("باركود جديد. اكتب بيانات المنتج وارفع صورته ثم احفظ.");}
 }
-
 async function stopProductScanner(){
  if(productScanner){
   try{if(productScanner.isScanning)await productScanner.stop();}catch(e){}
@@ -439,14 +408,10 @@ async function stopProductScanner(){
  document.getElementById("scannerBox").classList.add("hidden");
 }
 
-/* ===== المشتريات ===== */
-
+/* المشتريات */
 async function loadPurchasePage(){
- await loadPurchaseOptions();
- await loadPurchases();
- renderPurchaseItems();
+ await loadPurchaseOptions();await loadPurchases();renderPurchaseItems();
 }
-
 async function loadPurchaseOptions(){
  const [p,s]=await Promise.all([
   db.from("products").select("id,name,كود,purchase_price").order("name"),
@@ -454,296 +419,244 @@ async function loadPurchaseOptions(){
  ]);
  if(p.error){msg("تعذر تحميل المنتجات: "+p.error.message);return;}
  if(s.error){msg("تعذر تحميل الموردين: "+s.error.message);return;}
-
  productsCache=p.data||[];
- const productSelect=document.getElementById("purchaseProduct");
- productSelect.innerHTML='<option value="">اختر المنتج</option>'+
+ document.getElementById("purchaseProduct").innerHTML='<option value="">اختر المنتج</option>'+
   productsCache.map(x=>`<option value="${safe(x.id)}">${safe(x.name)}${x["كود"]?" — "+safe(x["كود"]):""}</option>`).join("");
-
- const supplierSelect=document.getElementById("purchaseSupplier");
- supplierSelect.innerHTML='<option value="">بدون تحديد مورد</option>'+
+ document.getElementById("purchaseSupplier").innerHTML='<option value="">بدون تحديد مورد</option>'+
   (s.data||[]).map(x=>`<option value="${safe(x.id)}">${safe(x.name)}</option>`).join("");
 }
-
 document.addEventListener("change",function(e){
  if(e.target&&e.target.id==="purchaseProduct"){
   const p=productsCache.find(x=>x.id===e.target.value);
   if(p)document.getElementById("purchaseCost").value=p.purchase_price??"";
  }
 });
-
 function addPurchaseItem(){
  const productId=document.getElementById("purchaseProduct").value;
  const quantity=Number(document.getElementById("purchaseQty").value);
  const unitCost=Number(document.getElementById("purchaseCost").value);
  const product=productsCache.find(x=>x.id===productId);
-
  if(!product)return msg("اختار المنتج أولاً");
  if(!Number.isFinite(quantity)||quantity<=0)return msg("اكتب كمية صحيحة أكبر من صفر");
  if(!Number.isFinite(unitCost)||unitCost<0)return msg("اكتب سعر شراء صحيح");
-
  const existing=purchaseItems.find(x=>x.product_id===productId);
- if(existing){
-  existing.quantity+=quantity;
-  existing.unit_cost=unitCost;
-  existing.line_total=existing.quantity*existing.unit_cost;
- }else{
-  purchaseItems.push({
-   product_id:product.id,
-   name:product.name,
-   quantity,
-   unit_cost:unitCost,
-   line_total:quantity*unitCost
-  });
- }
-
+ if(existing){existing.quantity+=quantity;existing.unit_cost=unitCost;existing.line_total=existing.quantity*existing.unit_cost;}
+ else purchaseItems.push({product_id:product.id,name:product.name,quantity,unit_cost:unitCost,line_total:quantity*unitCost});
  document.getElementById("purchaseProduct").value="";
  document.getElementById("purchaseQty").value="";
  document.getElementById("purchaseCost").value="";
- renderPurchaseItems();
- msg("تمت إضافة الصنف للفاتورة");
+ renderPurchaseItems();msg("تمت إضافة الصنف للفاتورة");
 }
-
-function removePurchaseItem(index){
- purchaseItems.splice(index,1);
- renderPurchaseItems();
-}
-
+function removePurchaseItem(index){purchaseItems.splice(index,1);renderPurchaseItems();}
 function renderPurchaseItems(){
  const box=document.getElementById("purchaseItemsList");
  const total=purchaseItems.reduce((s,x)=>s+x.line_total,0);
  document.getElementById("purchaseTotal").textContent=money(total);
-
- if(!purchaseItems.length){
-  box.innerHTML="<p>لم تتم إضافة أصناف بعد</p>";
-  return;
- }
-
+ if(!purchaseItems.length){box.innerHTML="<p>لم تتم إضافة أصناف بعد</p>";return;}
  box.innerHTML="<table><thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody>"+
- purchaseItems.map((x,i)=>`<tr>
- <td>${safe(x.name)}</td>
- <td>${safe(x.quantity)}</td>
- <td>${money(x.unit_cost)}</td>
- <td>${money(x.line_total)}</td>
- <td><button class="secondary" onclick="removePurchaseItem(${i})">إزالة</button></td>
- </tr>`).join("")+"</tbody></table>";
+ purchaseItems.map((x,i)=>`<tr><td>${safe(x.name)}</td><td>${safe(x.quantity)}</td><td>${money(x.unit_cost)}</td><td>${money(x.line_total)}</td><td><button class="secondary" onclick="removePurchaseItem(${i})">إزالة</button></td></tr>`).join("")+"</tbody></table>";
 }
-
 async function savePurchase(){
  const btn=document.getElementById("savePurchaseBtn");
  if(!purchaseItems.length)return msg("أضف صنفًا واحدًا على الأقل");
  const total=purchaseItems.reduce((s,x)=>s+x.line_total,0);
  const paid=Number(document.getElementById("purchasePaid").value||0);
-
  if(!Number.isFinite(paid)||paid<0)return msg("راجع المبلغ المدفوع");
  if(paid>total)return msg("المبلغ المدفوع أكبر من إجمالي الفاتورة");
-
- btn.disabled=true;
- btn.textContent="جاري حفظ واعتماد الفاتورة...";
-
+ btn.disabled=true;btn.textContent="جاري حفظ واعتماد الفاتورة...";
  let invoiceId=null;
  try{
   const header={
    purchase_number:Date.now(),
    supplier_id:document.getElementById("purchaseSupplier").value||null,
-   status:"draft",
-   payment_method:document.getElementById("purchasePayment").value,
-   total,
-   paid,
-   notes:document.getElementById("purchaseNotes").value.trim()||null
+   status:"draft",payment_method:document.getElementById("purchasePayment").value,
+   total,paid,notes:document.getElementById("purchaseNotes").value.trim()||null
   };
-
-  const {data:invoice,error:invoiceError}=await db
-   .from("purchase_invoices").insert(header).select("id").single();
-
+  const {data:invoice,error:invoiceError}=await db.from("purchase_invoices").insert(header).select("id").single();
   if(invoiceError)throw invoiceError;
   invoiceId=invoice.id;
-
-  const items=purchaseItems.map(x=>({
-   purchase_invoice_id:invoiceId,
-   product_id:x.product_id,
-   description:x.name,
-   quantity:x.quantity,
-   unit_cost:x.unit_cost,
-   line_total:x.line_total
-  }));
-
+  const items=purchaseItems.map(x=>({purchase_invoice_id:invoiceId,product_id:x.product_id,description:x.name,quantity:x.quantity,unit_cost:x.unit_cost,line_total:x.line_total}));
   const {error:itemsError}=await db.from("purchase_invoice_items").insert(items);
-  if(itemsError){
-   throw new Error("تم إنشاء مسودة الفاتورة، لكن تعذرت إضافة الأصناف: "+itemsError.message);
-  }
-
-  const {data:approvalResult,error:approvalError}=await db.rpc(
-   "approve_purchase_invoice",
-   {p_purchase_invoice_id:invoiceId}
-  );
-
-  if(approvalError){
-   msg("تم حفظ الفاتورة كمسودة، لكن لم يتم اعتمادها أو إضافة المخزون. السبب: "+approvalError.message);
-   await loadPurchases();
-   return;
-  }
-
+  if(itemsError)throw new Error("تم إنشاء مسودة الفاتورة، لكن تعذرت إضافة الأصناف: "+itemsError.message);
+  const {data:approvalResult,error:approvalError}=await db.rpc("approve_purchase_invoice",{p_purchase_invoice_id:invoiceId});
+  if(approvalError){msg("تم حفظ الفاتورة كمسودة، لكن لم يتم اعتمادها أو إضافة المخزون. السبب: "+approvalError.message);await loadPurchases();return;}
   purchaseItems=[];
   document.getElementById("purchasePaid").value="0";
   document.getElementById("purchaseNotes").value="";
   document.getElementById("purchaseSupplier").value="";
-  renderPurchaseItems();
-
-  msg(approvalResult||"تم اعتماد فاتورة المشتريات وإضافة الكميات للمخزون.");
-  await loadPurchases();
-  await loadStock();
-  await loadStats();
-
- }catch(e){
-  msg((invoiceId?"الفاتورة محفوظة كمسودة. ":"")+"تعذر إكمال العملية: "+(e.message||String(e)));
-  await loadPurchases();
- }finally{
-  btn.disabled=false;
-  btn.textContent="حفظ واعتماد الفاتورة وإضافة المخزون";
- }
+  renderPurchaseItems();msg(approvalResult||"تم اعتماد فاتورة المشتريات وإضافة الكميات للمخزون.");
+  await loadPurchases();await loadStock();await loadStats();
+ }catch(e){msg((invoiceId?"الفاتورة محفوظة كمسودة. ":"")+"تعذر إكمال العملية: "+(e.message||String(e)));await loadPurchases();}
+ finally{btn.disabled=false;btn.textContent="حفظ واعتماد الفاتورة وإضافة المخزون";}
 }
-
 async function approveSavedPurchase(id){
  if(!confirm("هل تريد اعتماد الفاتورة وإضافة الكميات للمخزون؟"))return;
- const {data,error}=await db.rpc(
-  "approve_purchase_invoice",
-  {p_purchase_invoice_id:id}
- );
+ const {data,error}=await db.rpc("approve_purchase_invoice",{p_purchase_invoice_id:id});
  if(error){msg("تعذر اعتماد الفاتورة: "+error.message);return;}
- msg(data||"تم اعتماد الفاتورة بنجاح");
- await loadPurchases();
- await loadStock();
- await loadStats();
+ msg(data||"تم اعتماد الفاتورة بنجاح");await loadPurchases();await loadStock();await loadStats();
 }
-
 async function loadPurchases(){
- const {data,error}=await db.from("purchase_invoices")
-  .select("id,purchase_number,supplier_id,status,total,paid,payment_method,created_at")
-  .order("created_at",{ascending:false}).limit(100);
-
+ const {data,error}=await db.from("purchase_invoices").select("id,purchase_number,supplier_id,status,total,paid,payment_method,created_at").order("created_at",{ascending:false}).limit(100);
  const box=document.getElementById("purchasesList");
  if(error){box.textContent=error.message;return;}
  if(!data||!data.length){box.innerHTML="<p>لا توجد فواتير مشتريات حتى الآن</p>";return;}
-
  const supplierIds=[...new Set(data.map(x=>x.supplier_id).filter(Boolean))];
  let supplierMap={};
-
  if(supplierIds.length){
   const {data:suppliers}=await db.from("suppliers").select("id,name").in("id",supplierIds);
   (suppliers||[]).forEach(s=>supplierMap[s.id]=s.name);
  }
-
  box.innerHTML="<table><thead><tr><th>رقم الفاتورة</th><th>المورد</th><th>الإجمالي</th><th>المدفوع</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody>"+
- data.map(x=>`<tr>
- <td>${safe(x.purchase_number)}</td>
- <td>${safe(supplierMap[x.supplier_id]||"—")}</td>
- <td>${money(x.total)}</td>
- <td>${money(x.paid)}</td>
- <td>${x.status==="approved"?"معتمدة":safe(x.status)}</td>
- <td>${safe(new Date(x.created_at).toLocaleString("ar-EG"))}</td>
- <td>${x.status==="draft"?`<button onclick="approveSavedPurchase('${safe(x.id)}')">اعتماد</button>`:"—"}</td>
- </tr>`).join("")+"</tbody></table>";
+ data.map(x=>`<tr><td>${safe(x.purchase_number)}</td><td>${safe(supplierMap[x.supplier_id]||"—")}</td><td>${money(x.total)}</td><td>${money(x.paid)}</td><td>${x.status==="approved"?"معتمدة":safe(x.status)}</td><td>${safe(new Date(x.created_at).toLocaleString("ar-EG"))}</td><td>${x.status==="draft"?`<button onclick="approveSavedPurchase('${safe(x.id)}')">اعتماد</button>`:"—"}</td></tr>`).join("")+"</tbody></table>";
 }
 
-/* ===== العملاء والموردون والمصروفات ===== */
+/* المبيعات */
+async function loadSalesPage(){
+ const [p,c]=await Promise.all([
+  db.from("products").select("id,name,كود,selling_price").order("name"),
+  db.from("customers").select("id,name").order("name")
+ ]);
+ if(p.error)return msg("تعذر تحميل المنتجات: "+p.error.message);
+ if(c.error)return msg("تعذر تحميل العملاء: "+c.error.message);
+ salesProductsCache=p.data||[];
+ document.getElementById("saleProduct").innerHTML='<option value="">اختر المنتج</option>'+
+  salesProductsCache.map(x=>'<option value="'+safe(x.id)+'">'+safe(x.name)+(x["كود"]?' — '+safe(x["كود"]):"")+'</option>').join("");
+ document.getElementById("saleCustomer").innerHTML='<option value="">بدون تحديد عميل</option>'+
+  (c.data||[]).map(x=>'<option value="'+safe(x.id)+'">'+safe(x.name)+'</option>').join("");
+ renderSaleItems();await loadSalesInvoices();
+}
+document.addEventListener("change",function(e){
+ if(e.target&&e.target.id==="saleProduct"){
+  const p=salesProductsCache.find(x=>x.id===e.target.value);
+  if(p)document.getElementById("salePrice").value=p.selling_price??"";
+ }
+});
+function renderSaleItems(){
+ const box=document.getElementById("saleItemsList");
+ if(!saleItems.length){box.textContent="لم تتم إضافة أصناف بعد";document.getElementById("saleTotal").textContent=money(0);return;}
+ box.innerHTML="<table><thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead><tbody>"+
+ saleItems.map((x,i)=>'<tr><td>'+safe(x.name)+'</td><td>'+x.quantity+'</td><td>'+money(x.unit_price)+'</td><td>'+money(x.quantity*x.unit_price)+'</td><td><button class="secondary" onclick="removeSaleItem('+i+')">إزالة</button></td></tr>').join("")+"</tbody></table>";
+ document.getElementById("saleTotal").textContent=money(saleItems.reduce((s,x)=>s+x.quantity*x.unit_price,0));
+}
+function addSaleItem(){
+ const productId=document.getElementById("saleProduct").value;
+ const quantity=Number(document.getElementById("saleQty").value);
+ const unitPrice=Number(document.getElementById("salePrice").value);
+ const p=salesProductsCache.find(x=>x.id===productId);
+ if(!p)return msg("اختار المنتج أولاً");
+ if(!Number.isFinite(quantity)||quantity<=0)return msg("اكتب كمية صحيحة أكبر من صفر");
+ if(!Number.isFinite(unitPrice)||unitPrice<0)return msg("اكتب سعر بيع صحيح");
+ const existing=saleItems.find(x=>x.product_id===productId);
+ if(existing){existing.quantity+=quantity;existing.unit_price=unitPrice;}
+ else saleItems.push({product_id:productId,name:p.name,quantity,unit_price:unitPrice});
+ document.getElementById("saleQty").value="";
+ renderSaleItems();msg("تمت إضافة الصنف");
+}
+function removeSaleItem(i){saleItems.splice(i,1);renderSaleItems();}
+async function saveSaleInvoice(){
+ if(!saleItems.length)return msg("أضف صنفًا واحدًا على الأقل");
+ const total=saleItems.reduce((s,x)=>s+x.quantity*x.unit_price,0);
+ const paid=Number(document.getElementById("salePaid").value||0);
+ if(!Number.isFinite(paid)||paid<0||paid>total)return msg("راجع المبلغ المدفوع؛ يجب ألا يتجاوز إجمالي الفاتورة");
+ const btn=document.getElementById("saveSaleBtn");
+ btn.disabled=true;btn.textContent="جاري حفظ الفاتورة...";
+ try{
+  const customerId=document.getElementById("saleCustomer").value||null;
+  const {data:header,error:headerError}=await db.from("invoices").insert({
+   customer_id:customerId,invoice_type:"sale",
+   payment_method:document.getElementById("salePayment").value,
+   total,paid,notes:document.getElementById("saleNotes").value.trim(),status:"draft"
+  }).select("id,invoice_number").single();
+  if(headerError)throw headerError;
+  const rows=saleItems.map(x=>({invoice_id:header.id,product_id:x.product_id,description:x.name,quantity:x.quantity,unit_price:x.unit_price}));
+  const {error:itemsError}=await db.from("invoice_items").insert(rows);
+  if(itemsError)throw new Error("تم إنشاء مسودة رقم "+header.invoice_number+" لكن تعذر حفظ الأصناف: "+itemsError.message);
+  const {data:approval,error:approvalError}=await db.rpc("approve_invoice",{p_invoice_id:header.id});
+  if(approvalError)throw new Error("تم حفظ مسودة رقم "+header.invoice_number+" ولم يتم اعتمادها: "+approvalError.message);
+  msg((approval||"تم اعتماد الفاتورة")+" — رقم "+header.invoice_number);
+  saleItems=[];
+  ["saleQty","salePrice","saleNotes"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("salePaid").value="0";
+  document.getElementById("saleCustomer").value="";
+  document.getElementById("saleProduct").value="";
+  renderSaleItems();
+  await loadSalesInvoices();await loadStock();await loadStats();await loadReports();
+ }catch(e){msg(e.message||String(e));await loadSalesInvoices();}
+ finally{btn.disabled=false;btn.textContent="حفظ واعتماد فاتورة البيع";}
+}
+async function approveSavedSale(id,number){
+ if(!confirm("اعتماد فاتورة المبيعات رقم "+number+" وخصم الكمية من المخزون؟"))return;
+ const {data,error}=await db.rpc("approve_invoice",{p_invoice_id:id});
+ if(error){msg("تعذر اعتماد الفاتورة: "+error.message);return;}
+ msg(data||"تم اعتماد الفاتورة وخصم المخزون");
+ await loadSalesInvoices();await loadStock();await loadStats();await loadReports();
+}
+async function loadSalesInvoices(){
+ const {data,error}=await db.from("invoices").select("id,invoice_number,total,paid,payment_method,status,created_at").eq("invoice_type","sale").order("created_at",{ascending:false}).limit(100);
+ const box=document.getElementById("salesList");
+ if(error){box.textContent=error.message;return;}
+ const rows=data||[];
+ if(!rows.length){box.innerHTML="<p>لا توجد فواتير مبيعات بعد</p>";return;}
+ box.innerHTML="<table><thead><tr><th>رقم</th><th>الإجمالي</th><th>المدفوع</th><th>الدفع</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody>"+
+ rows.map(x=>'<tr><td>'+safe(x.invoice_number)+'</td><td>'+money(x.total)+'</td><td>'+money(x.paid)+'</td><td>'+safe(x.payment_method)+'</td><td>'+(x.status==="approved"?"معتمدة":safe(x.status))+'</td><td>'+safe(new Date(x.created_at).toLocaleString("ar-EG"))+'</td><td>'+(x.status==="draft"?'<button onclick="approveSavedSale(\''+safe(x.id)+'\',\''+safe(x.invoice_number)+'\')">اعتماد</button>':"—")+'</td></tr>').join("")+
+ "</tbody></table>";
+}
 
+/* العملاء والموردون والمصروفات */
 async function addCustomer(){
  const name=document.getElementById("cname").value.trim();
  if(!name)return msg("اكتب اسم العميل");
  const {error}=await db.from("customers").insert({
-  name,
-  phone:document.getElementById("cphone").value.trim(),
+  name,phone:document.getElementById("cphone").value.trim(),
   address:document.getElementById("caddress").value.trim(),
   notes:document.getElementById("cnotes").value.trim()
  });
  if(error)return msg(error.message);
  ["cname","cphone","caddress","cnotes"].forEach(id=>document.getElementById(id).value="");
- msg("تم حفظ العميل");
- loadCustomers();loadStats();
+ msg("تم حفظ العميل");loadCustomers();loadStats();
 }
-
 async function loadCustomers(){
- const {data,error}=await db.from("customers")
-  .select("name,phone,address,created_at").order("created_at",{ascending:false});
- document.getElementById("customersList").innerHTML=error?safe(error.message):
-  table(data,[["name","الاسم"],["phone","الهاتف"],["address","العنوان"]]);
+ const {data,error}=await db.from("customers").select("name,phone,address,created_at").order("created_at",{ascending:false});
+ document.getElementById("customersList").innerHTML=error?safe(error.message):table(data,[["name","الاسم"],["phone","الهاتف"],["address","العنوان"]]);
 }
-
 async function addSupplier(){
  const name=document.getElementById("sname").value.trim();
  if(!name)return msg("اكتب اسم المورد");
- const {error}=await db.from("suppliers").insert({
-  name,
-  phone:document.getElementById("sphone").value.trim(),
-  address:document.getElementById("saddress").value.trim()
- });
+ const {error}=await db.from("suppliers").insert({name,phone:document.getElementById("sphone").value.trim(),address:document.getElementById("saddress").value.trim()});
  if(error)return msg(error.message);
  ["sname","sphone","saddress"].forEach(id=>document.getElementById(id).value="");
- msg("تم حفظ المورد");
- loadSuppliers();
+ msg("تم حفظ المورد");loadSuppliers();
 }
-
 async function loadSuppliers(){
- const {data,error}=await db.from("suppliers")
-  .select("name,phone,address").order("created_at",{ascending:false});
- document.getElementById("suppliersList").innerHTML=error?safe(error.message):
-  table(data,[["name","المورد"],["phone","الهاتف"],["address","العنوان"]]);
+ const {data,error}=await db.from("suppliers").select("name,phone,address").order("created_at",{ascending:false});
+ document.getElementById("suppliersList").innerHTML=error?safe(error.message):table(data,[["name","المورد"],["phone","الهاتف"],["address","العنوان"]]);
 }
-
 async function addExpense(){
  const title=document.getElementById("etitle").value.trim();
  const amount=Number(document.getElementById("eamount").value);
  if(!title||!Number.isFinite(amount)||amount<0)return msg("راجع اسم المصروف والمبلغ");
- const {error}=await db.from("expenses").insert({
-  title,amount,
-  payment_method:document.getElementById("epayment").value,
-  notes:document.getElementById("enotes").value.trim()
- });
+ const {error}=await db.from("expenses").insert({title,amount,payment_method:document.getElementById("epayment").value,notes:document.getElementById("enotes").value.trim()});
  if(error)return msg(error.message);
  ["etitle","eamount","enotes"].forEach(id=>document.getElementById(id).value="");
- msg("تم تسجيل المصروف");
- loadExpenses();loadStats();
+ msg("تم تسجيل المصروف");loadExpenses();loadStats();
 }
-
 async function loadExpenses(){
- const {data,error}=await db.from("expenses")
-  .select("title,amount,payment_method,created_at")
-  .order("created_at",{ascending:false}).limit(100);
- document.getElementById("expensesList").innerHTML=error?safe(error.message):
-  table((data||[]).map(x=>({...x,amount:money(x.amount)})),
-  [["title","البيان"],["amount","المبلغ"],["payment_method","طريقة الدفع"],["created_at","التاريخ"]]);
+ const {data,error}=await db.from("expenses").select("title,amount,payment_method,created_at").order("created_at",{ascending:false}).limit(100);
+ document.getElementById("expensesList").innerHTML=error?safe(error.message):table((data||[]).map(x=>({...x,amount:money(x.amount)})),[["title","البيان"],["amount","المبلغ"],["payment_method","طريقة الدفع"],["created_at","التاريخ"]]);
 }
-
 async function loadInvoices(){
- const {data,error}=await db.from("invoices")
-  .select("invoice_number,invoice_type,total,paid,payment_method,status,created_at")
-  .order("created_at",{ascending:false}).limit(100);
- document.getElementById("invoicesList").innerHTML=error?safe(error.message):
-  table((data||[]).map(x=>({...x,total:money(x.total),paid:money(x.paid)})),
-  [["invoice_number","رقم الفاتورة"],["invoice_type","النوع"],["total","الإجمالي"],["paid","المدفوع"],["payment_method","الدفع"],["status","الحالة"],["created_at","التاريخ"]]);
+ const {data,error}=await db.from("invoices").select("invoice_number,invoice_type,total,paid,payment_method,status,created_at").order("created_at",{ascending:false}).limit(100);
+ document.getElementById("invoicesList").innerHTML=error?safe(error.message):table((data||[]).map(x=>({...x,total:money(x.total),paid:money(x.paid)})),[["invoice_number","رقم الفاتورة"],["invoice_type","النوع"],["total","الإجمالي"],["paid","المدفوع"],["payment_method","الدفع"],["status","الحالة"],["created_at","التاريخ"]]);
 }
-
 async function loadStock(){
- const {data,error}=await db.from("inventory_balance")
-  .select("product_name,product_code,current_stock").order("product_name");
- document.getElementById("stockList").innerHTML=error?safe(error.message):
-  table(data,[["product_name","المنتج"],["product_code","الكود"],["current_stock","الرصيد"]]);
+ const {data,error}=await db.from("inventory_balance").select("product_name,product_code,current_stock").order("product_name");
+ document.getElementById("stockList").innerHTML=error?safe(error.message):table(data,[["product_name","المنتج"],["product_code","الكود"],["current_stock","الرصيد"]]);
 }
-
 async function loadReports(){
- const today=new Date();
- today.setHours(0,0,0,0);
- const {data:inv,error:e1}=await db.from("invoices")
-  .select("total,paid,created_at,status")
-  .gte("created_at",today.toISOString()).eq("status","approved");
- const {data:exp,error:e2}=await db.from("expenses")
-  .select("amount,created_at").gte("created_at",today.toISOString());
-
- if(e1||e2){
-  document.getElementById("reportsList").textContent=(e1||e2).message;
-  return;
- }
+ const today=new Date();today.setHours(0,0,0,0);
+ const {data:inv,error:e1}=await db.from("invoices").select("total,paid,created_at,status").gte("created_at",today.toISOString()).eq("status","approved");
+ const {data:exp,error:e2}=await db.from("expenses").select("amount,created_at").gte("created_at",today.toISOString());
+ if(e1||e2){document.getElementById("reportsList").textContent=(e1||e2).message;return;}
  const sales=(inv||[]).reduce((s,x)=>s+Number(x.total||0),0);
  const paid=(inv||[]).reduce((s,x)=>s+Number(x.paid||0),0);
  const expenses=(exp||[]).reduce((s,x)=>s+Number(x.amount||0),0);
@@ -753,7 +666,6 @@ async function loadReports(){
  <div class="stat">مصروفات اليوم<h2>${money(expenses)}</h2></div>
  <p>التقارير الحالية تعرض ملخص اليوم فقط.</p>`;
 }
-
 db.auth.onAuthStateChange((event,session)=>{
  if(event==="SIGNED_IN"&&session)setTimeout(startApp,0);
 });
