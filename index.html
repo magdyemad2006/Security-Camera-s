@@ -755,8 +755,52 @@ async function loadInvoices(){
  data.map(x=>`<tr><td>${safe(x.invoice_number)}</td><td>${safe(x.invoice_type)}</td><td>${money(x.total)}</td><td>${money(x.paid)}</td><td>${safe(x.status)}</td><td><button onclick="printSalePDF('${x.id}')">طباعة PDF</button></td></tr>`).join("")+"</table>";
 }
 async function loadStock(){
- const {data,error}=await db.from("inventory_balance").select("product_name,product_code,current_stock").order("product_name");
- $("stockList").innerHTML=error?safe(error.message):table(data,[["product_name","المنتج"],["product_code","الكود"],["current_stock","الرصيد"]]);
+ const [stock,products]=await Promise.all([
+  db.from("inventory_balance")
+   .select("product_name,product_code,current_stock")
+   .order("product_name"),
+
+  db.from("products")
+   .select('name,"كود",image_url')
+ ]);
+
+ if(stock.error){
+  $("stockList").textContent=stock.error.message;
+  return;
+ }
+
+ if(products.error){
+  $("stockList").textContent=products.error.message;
+  return;
+ }
+
+ const images={};
+
+ (products.data||[]).forEach(p=>{
+  if(p["كود"])images[p["كود"]]=p.image_url;
+ });
+
+ const rows=stock.data||[];
+
+ $("stockList").innerHTML=
+  "<table><thead><tr>"+
+  "<th>الصورة</th><th>المنتج</th>"+
+  "<th>الكود</th><th>الرصيد</th>"+
+  "</tr></thead><tbody>"+
+  rows.map(r=>{
+   const img=images[r.product_code];
+
+   return `<tr>
+    <td>${img?
+     `<img class="photo" src="${safe(img)}" alt="صورة المنتج">`:
+     "—"}</td>
+    <td>${safe(r.product_name)}</td>
+    <td>${safe(r.product_code)}</td>
+    <td>${safe(r.current_stock)}</td>
+   </tr>`;
+  }).join("")+
+  "</tbody></table>";
+}
 }
 
 /* عروض الأسعار */
