@@ -108,7 +108,19 @@ label{display:block;margin-top:10px;color:var(--muted)}
  </section>
 
  <section id="products" class="page card hidden">
-  <h2>المنتجات</h2>
+ <h2>المنتجات</h2>
+
+<div class="card">
+  <h3>📦 كتالوج الكاميرات والإكسسوارات</h3>
+  <p class="hint">
+    إضافة الأصناف الشائعة دفعة واحدة، مع صور توضيحية.
+    تقدر تعدّل الأسعار وترفع صور المنتجات الحقيقية بعد كده.
+  </p>
+  <button onclick="seedProductCatalog(this)">
+    إضافة كتالوج الأصناف
+  </button>
+  <div id="catalogStatus" class="hint"></div>
+</div>
   <button onclick="openProductScanner()">📷 فتح ماسح QR / Barcode</button>
   <div id="scannerBox" class="card hidden">
    <div id="reader"></div>
@@ -399,6 +411,75 @@ function previewProductImage(){
  const f=$("pimage").files[0],img=$("pimagePreview");
  if(!f){img.style.display="none";return}
  img.src=URL.createObjectURL(f);img.style.display="block";
+}async function seedProductCatalog(button){
+ const status=document.getElementById("catalogStatus");
+
+ const catalog=[
+  ["كاميرا داخلية Dome","CAM-DOME"],
+  ["كاميرا خارجية Bullet","CAM-BULLET"],
+  ["كاميرا متحركة PTZ","CAM-PTZ"],
+  ["كاميرا IP","CAM-IP"],
+  ["كاميرا Wi-Fi","CAM-WIFI"],
+  ["جهاز تسجيل DVR","REC-DVR"],
+  ["جهاز تسجيل NVR","REC-NVR"],
+  ["هارد مراقبة","HDD-CCTV"],
+  ["باور سبلاي 12V","PWR-12V"],
+  ["محول كهرباء","ADAPTER"],
+  ["كابل RG59","CBL-RG59"],
+  ["كابل UTP","CBL-UTP"],
+  ["فيشة BNC","CON-BNC"],
+  ["فيشة DC","CON-DC"],
+  ["سويتش شبكة","NET-SWITCH"],
+  ["سويتش PoE","NET-POE"],
+  ["علبة حماية خارجية","BOX-OUT"],
+  ["راك أجهزة","RACK"],
+  ["علبة تجميع","JUNCTION"]
+ ];
+
+ if(button)button.disabled=true;
+ let added=0,skipped=0;
+
+ try{
+  for(const item of catalog){
+   const name=item[0];
+   const code=item[1];
+
+   const {data,error:findError}=await db
+    .from("products")
+    .select("name")
+    .eq("name",name)
+    .maybeSingle();
+
+   if(findError)throw findError;
+
+   if(data){
+    skipped++;
+    continue;
+   }
+
+   const {error}=await db.from("products").insert({
+    name:name,
+    "كود":code,
+    purchase_price:0,
+    selling_price:0,
+    image_url:null
+   });
+
+   if(error)throw error;
+   added++;
+  }
+
+  status.textContent=
+   "تمت إضافة "+added+" صنف، وتم تخطي "+skipped+" صنف موجود مسبقًا.";
+
+  await loadProducts();
+  await loadStats();
+
+ }catch(error){
+  status.textContent="حصل خطأ: "+error.message;
+ }finally{
+  if(button)button.disabled=false;
+ }
 }
 async function addProduct(){
  const btn=$("saveProductBtn"),name=$("pname").value.trim();
